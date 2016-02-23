@@ -1,328 +1,290 @@
-<!DOCTYPE html>
-<html>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 
-  <!--
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-  -->
+    <link href='https://fonts.googleapis.com/css?family=Lato|Montserrat' rel='stylesheet' type='text/css'>
+    <script src="lodash.min.js" defer></script>
 
-  <meta name="description" content="Get inspired and figure out your ideal body weight by viewing weight loss pictures of individuals similar to you.">
-
-  <script src="papaparse.min.js"></script>
-  <script src="jquery-2.0.3.min.js"></script>
-
-
-  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-
-  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
-
-  <!-- Bootstrap -->
-
-  <link rel="stylesheet" href="bootstrap.min.css">
-  <link rel="stylesheet" href="bootstrap-theme.min.css">
-  <script src="bootstrap.min.js"></script>
+    <!-- Start Vex -->
+    <link rel="stylesheet" href="vex.css" />
+    <link rel="stylesheet" href="vex-theme-default.css" />
+    <!-- End Vex -->
 
 
-  <script src="jquery-ui-1.10.3.custom.min.js"></script>
+    <style type="text/css">
+        /* <![CDATA[ */
 
-  <script src="jquery.ui.touch-punch.min.js"></script>
+        /*
+        #col1 {display:inline; float: left; position:relative; width: 450px ; min-width:450px; background:green;}
 
-  <link rel="stylesheet" href="jquery-ui-1.10.3.custom.min.css">
+        #col4 {display:inline;float: left; position:relative; width: 450px;min-width:450px; background:blue;
+        }
+
+        #col2 {display:inline;float: left; position:relative; width: 450px;min-width:450px; background:darkred;
+        }
+        #col3 {display:inline;float: left; position:relative; width: 450px;min-width:450px; background:yellow;
+        }
+        */
+        #float-wrap {
+            text-align:center;
+            white-space: nowrap;
+        }
+        .infinite-scroll-column {
+            /*width: 400px;*/
+            /*height: 100px;*/
+            /*border width is set inside of CSS */
+            /*border-width: 20px;*/
+            border-style: solid;
+            /*border-color: yellow;*/
+            border-color: transparent;
+            /*float: left;*/
+            display:inline-block;
+            vertical-align:top;
+        }
+        .outer {
+            overflow-x: scroll;
+        }
+
+        .image-entry-text {
+            /*width:100%;*/
+            font-family: 'Lato', sans-serif;
+            text-align: left;
+            /*
+            margin-left: 10px;
+            margin-right: 10px;
+            */
+        }
+
+        #image-height-box{
+            /*display: inline-block;*/
+            /*background-color: #e1edf7;*/
+            border-right: 1px solid lightgray;
+        }
+
+        #image-previous-weight-box{
+            /*display: inline-block;*/
+            border-right: 1px solid lightgray;
+            /*background-color: #eed3d7;*/
+        }
+
+        #image-current-weight-box{
+            /*display: inline-block;*/
+            /*border-right: 1px solid black;*/
+            /*background-color: #a9dba9;*/
+        }
+
+        #image-url{
+            float:right;
+            text-align: right;
+            /*
+            position:absolute;
+            right:20px;*/
+        }
+
+        .gap-after-image-entry {
+            height: 20px;
+        }
+
+        .image-entry-box {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            /*background-color: #ddd;*/
+            box-shadow: 0px 3px 6px gray;
+            /*
+            -10px 8px 15px gray, 10px 8px 15px gray;
+            */
+
+        }
+
+        body {
+            font-family: sans-serif;
+            /*font-family: sans-serif;*/
+            background-color: #E8E8E8;
+            margin: 0;
+        }
+
+        .input_parameters_boxes {
+            display:inline-block;
+            vertical-align:top;
+            border-style: solid;
+            border-color:transparent;
+            border-width: 12px;
+            vertical-align: top;
+        }
+
+        #options-wrapper {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.3em;
+            background-color: floralwhite;
+            -webkit-box-shadow: 0 4px 6px -6px #222;
+            -moz-box-shadow: 0 4px 6px -6px #222;
+            box-shadow: 0 4px 6px -6px #222;
+        }
+
+        #title-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2em;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            cursor: default;
+        }
+
+        input[type="radio"]{
+            display: none;
+        }
+
+        input[type="radio"]+label{
+            cursor: pointer;
+        }
+
+        hr {
+
+            /*
+            height: 6px;
+
+            border: 0;
+            box-shadow: inset 0 6px 6px -6px black;
+            */
+            border: 0;
+            height: 1px;
+            background: #333;
+            background-image: -webkit-linear-gradient(left, #ccc, #333, #ccc);
+            background-image:    -moz-linear-gradient(left, #ccc, #333, #ccc);
+            background-image:     -ms-linear-gradient(left, #ccc, #333, #ccc);
+            background-image:      -o-linear-gradient(left, #ccc, #333, #ccc);
+
+        }
+
+        input[type="radio"]:not(:checked)+label{ color: lightgray; }
 
 
-  <script src="crossfilter.min.js"></script>
+    </style>
 
-  <link rel="stylesheet" href="my.css">
+    <link href="nouislider.css" rel="stylesheet">
+    <script src="nouislider.min.js" defer></script>
+    <script src="jquery-2.2.0.min.js" defer></script>
+    <script src="vex.combined.min.js" defer></script>
+    <script src="crossfilter.min.js" defer></script>
 
-  <!--
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-  -->
+    <!--
 
-  <!-- bxSlider Javascript file -->
-  <script src="jquery.bxslider.min.js"></script>
-  <!-- bxSlider CSS file -->
-  <link href="jquery.bxslider.css" rel="stylesheet" />
+    TODO - I want to do logic here to determine the number of columns and stuff here
 
-  <script type="text/javascript" src="site.js"></script>
+    -->
 
-  <style>
-    a:active, a:focus {outline:none;}
+    <!-- Start Lightbox -->
+    <link type="text/css" rel="stylesheet" href="lightGallery.min.css" />
+    <script type="text/javascript" src="lightgallery.min.js" defer></script>
+    <script src="lg-thumbnail.min.js" defer></script>
+    <!-- End Lightbox -->
 
-    /* Prevents annoying scrollbars:
-    http://stackoverflow.com/questions/2436321/what-is-causing-that-nasty-horizontal-scrollbar
-    */
-    html {
-      height: 100%;
-      margin-bottom: 1px;
-      overflow-y: scroll;
-      overflow-x: hidden;
-    }
+    <script src="infinity.min.js" defer></script>
+    <script src="papaparse.min.js" defer></script>
+    <script src="site2.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="site2.css">
 
-    body {
-     margin-left:1em;
-     margin-top:1em;
-    }
+    <link rel="stylesheet" href="font-awesome.min.css">
 
-    .no-padding-or-margin{
-      padding: 0px;
-      margin: 0px;
-    }
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>VisualBMI - See what weight looks like on a human body</title>
 
-    .list-group-item-text{
-      color:darkgray;
-    }
-    .orange-color{
-      color:#FFC285
-    }
-    .highlight-orange{
-      background-color: #FFC285
-    }
-    .sky-blue-color{
-      color: #A9C6FF
-    }
-    .highlight-sky-blue{
-      background-color: #A9C6FF
-    }
 
-  </style>
-
-  <title>What will I look like?</title>
-
-<!-- Google Analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-46102575-1', 'whatwillilooklike.com');
-  ga('send', 'pageview');
-
-</script>
 
 </head>
 <body>
 
-<!-- Beginning Facebook Stuff -->
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<div id="options-wrapper">
+    <div id="title-text" class="input_parameters_boxes">VisualBMI</div>
+    <!-- Gender Selector -->
+    <div style="display: inline-block;">
+    <span class="input_parameters_boxes">
+        <input type="radio" name="gender_radio" id="male_radio" class="radio" value="male" />
+        <label id="male_radio_label" for="male_radio"><i class="fa fa-mars fa-2x"></i></label>
+        &nbsp;
+        <input type="radio" name="gender_radio" id="female_radio" class="radio" value="female" checked/>
+        <label id="female_radio_label" for="female_radio"><i class="fa fa-venus fa-2x"></i></label>
+    </span>
 
-<!-- End of Facebook Stuff -->
-
-
-<div class="row">
-  <div class="col-xs-4" style="min-width: 150px;">
-    <div class="row">
-      <div class="col-xs-12">
-        <h2 class="no-padding-or-margin">What will <span id="gender_logo_span"></span> look like?</h2>
+    <!-- Weight Range Slider -->
+    <span id="weight-wrapper" class="input_parameters_boxes" style="width:300px;">
+        <div id="slider-range-weight"></div>
         <br/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-4">
-        <div class="btn-group" data-toggle="buttons">
-          <label class="btn btn-default">
-            <b>M</b>
-            <input type="radio" name="gender_radio" value="male" id="gender_radio_male"><i class="fa fa-male" style="font-size:1.5em;color:#2B6BF6;"></i>
-          </label>
-          <label class="btn btn-default active">
-            <b>F</b>
-            <input type="radio" name="gender_radio" value="female" id="gender_radio_female" checked><i class="fa fa-female" style="font-size:1.5em;color:#FE2EC8;"></i>
-          </label>
-        </div>
+        <div id="selected_weight" style="text-align: center;">Loading...</div>
+    </span>
 
-       </div>
-       <div class="col-xs-8">
-
-         <div class="btn-group" data-toggle="buttons">
-          <label class="btn btn-default active">
-            <input type="radio" name="units_radio" value="imperial" id="units_radio_imperial">Imperial
-          </label>
-          <label class="btn btn-default">
-            <input type="radio" name="units_radio" value="metric" id="units_radio_metric" checked>Metric
-          </label>
-          </div>
-
-       </div>
-      <!--
-      <div class="col-xs-6">
-        <!--
-        <label>
-          <input id="nsfw_checkbox" type="checkbox"> Allow NSFW Images
-        </label>
+    <!-- Height Range Slider -->
+    <span id="height-wrapper" class="input_parameters_boxes" style="width:300px;">
+        <div id="slider-range-height"></div>
         <br/>
-      </div>
-      -->
+        <div id="selected_height" style="text-align: center;">Loading...</div>
+    </span>
+
+
+    <!-- Metric or English Selector -->
+    <span class="input_parameters_boxes">
+        <input type="radio" name="units_radio" id="imperial_radio" class="radio" value="imperial" checked/>
+            <label for="imperial_radio">Imperial</label>
+        &nbsp;
+        <input type="radio" name="units_radio" id="metric_radio" class="radio" value="metric" />
+            <label for="metric_radio">Metric</label>
+    </span>
+
+    <span class="input_parameters_boxes"><i class="fa fa-question-circle fa-2x" onclick="showInfoDialog();"></i></span>
     </div>
 
-    <div class="row">
-      <div class="col-xs-12">
-        <p>
-          <label for="height">Height range:</label>
-          <span type="text" id="height" style="border: 0; color: #f6931f; font-weight: bold;"></span>
-        </p>
-        <div id="height-slider-range"></div>
-        <br/>
-        <p>
-          <label for="weight">Weight range:</label>
-          <input type="text" id="weight" style="border: 0; color: #f6931f; font-weight: bold;" />
-        </p>
-        <div id="weight-slider-range"></div>
-        <br/>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <div id="image-list-group" class="list-group" style="height:400px; overflow-y:scroll; box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;">
-
-          <!--
-          <a href="#" class="list-group-item active">
-            <h5 class="list-group-item-heading">Reddit title</h5>
-            <p class="list-group-item-text">5'11 / 125 lbs</p>
-          </a>
-          <a href="#" class="list-group-item">Dapibus ac facilisis in
-            Second Item
-          </a>
-          <a href="#" class="list-group-item">Morbi leo risus
-            Third Item
-          </a>
-          <a href="#" class="list-group-item">Porta ac consectetur ac
-            Fourth Item
-          </a>
-          <a href="#" class="list-group-item">Vestibulum at eros
-            Fifth Item
-          </a>
-          -->
-        </div>
-        <!--
-        Found <span id="number_of_results">X</span> results.
-        -->
-        <hr>
-      </div>
-
-    </div>
-    <div class="row">
-      <div class="col-xs-3">
-        <a href="mailto:whatwillilooklike@gmail.com">Feedback/Contact</a>
-      </div>
-      <div class="col-xs-1">
-      </div>
-      <div class="col-xs-2">
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://whatwillilooklike.com" data-text="Check out what you'll look like with:" data-via="wwilooklike">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-      </div>
-      <div class="col-xs-1">
-      </div>
-      <div class="col-xs-4">
-        <div class="fb-like" data-href="http://whatwillilooklike.com/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
-      </div>
-      <div class="col-xs-1">
-      </div>
-    </div>
-
-
-  </div>
-
-  <div class="col-xs-8">
-
-    <div id="submission_content">
-      <h4><b>Quick Start</b></h4>
-      <p>
-        First, select your flavor of gender to the left. <i class="fa fa-male" style="font-size:1.5em;color:#2B6BF6;"></i> <i class="fa fa-female" style="font-size:1.5em;color:#FE2EC8;"></i>
-      </p>
-      <p>
-        Next, play around with these sliders to <span class="highlight-orange"> filter by height and weight</span>:
-      </p>
-
-      <p>
-        <i class="fa fa-arrow-left orange-color" style="font-size:5em;"></i>
-      </p>
-
-      <p>
-        Finally, <span class="highlight-sky-blue"> select a submission.</span>
-      </p>
-
-      <p>
-        <i class="fa fa-arrow-left sky-blue-color" style="font-size:5em;"></i>
-      </p>
-      <br/>
-      <h4>Extras</h4>
-      <p>
-        <ul>
-          <li>If you find a submission you really like, you can bookmark it to come back later or email the URL to a friend.</li>
-          <li>You can find a link to the originally reddit submission next to its title after selecting a submission</li>
-        </ul>
-
-      </p>
-
-      <br/>
-      <h4>About</h4>
-      <p>
-        "What will I look like?" aims to inspire and demistify the weight-loss and weight management process.
-        Using a large database of pictures of men and women, you can get a feel for what would
-        be an appropriate weight for you. If you find this website useful, I would
-        appreciate it if you chould share it  with your friends or send some feedback my way. Enjoy!
-      </p>
-      <br/>
-
-      <span style="font-size: .9em; color:darkgray">
-      <h4>Disclaimers</h4>
-      <p>
-        The accuracy of the data on this site is limited to the accuracy of the user-submitted
-        data on reddit.com and the automated scraping of that data. See a physician before you start a fitness program. Excercise caution and good judgement and
-        don't believe everything you read on the internet. "What will I look like?" automatically
-        scrapes user submitted data from reddit.com and does not review the content. "What will I look like?"
-        is not responsible for the content sourced from reddit.com or any damages to users from
-        using this site.
-      </p>
-
-      <h4>Credits</h4>
-      <p>
-        All of the data on this website was automatically scraped from the online community reddit.com
-        (special shout-out to the subreddits r/loseit and r/progresspics). Thanks to all those who
-        share their successes and struggles on these communities. This website would not be possible
-        without you. Also big thanks for Imgur for
-        being a awesome image host.
-      </p>
-        </span>
-
-
-    </div>
-    <div id="bx-pager-container">
-      <!--
-      <div id="bx-pager">
-        <a data-slide-index="0" href=""><img src="http://i.imgur.com/J7NnmFBs.jpg" /></a>
-        <a data-slide-index="1" href=""><img src="http://i.imgur.com/ezEtkAKs.jpg" /></a>
-        <a data-slide-index="2" href=""><img src="http://i.imgur.com/6OT0zAXs.jpg" /></a>
-        <a data-slide-index="3" href=""><img src="http://i.imgur.com/5VxyMves.jpg" /></a>
-      </div>
-      -->
-    </div>
-
-    <br/>
-
-    <div id="bx-image-slider-container">
-      <!--
-        <ul id="bx-image-slider" class="bxslider">
-          <li><img src="http://i.imgur.com/J7NnmFB.jpg" /></li>
-          <li><img src="http://i.imgur.com/ezEtkAKh.jpg" /></li>
-          <li><img src="http://i.imgur.com/6OT0zAXh.jpg" /></li>
-          <li><img src="http://i.imgur.com/5VxyMveh.jpg" /></li>
-        </ul>
-      -->
-    </div>
-
-    <div id="submission_image_content"></div>
-
-  </div>
 </div>
+
+<br/>
+<!--
+Lightbox. It's hidden because we click it indirectly.
+
+-->
+
+<!--
+We have the image entry template here to play around with it
+-->
+<script type='text/html' id='image-entry-template'>
+    <div class="image-entry-box">
+        <img onclick="openLightBox(${index})" class="lazy-img" data-original="${image_url}" height="${image_height}" width="${image_width}" />
+        <div class="image-entry-text">
+            <!--
+            We put the image-url first so we can align it to the right
+            http://stackoverflow.com/questions/4797573/float-right-in-ie7-dropping-to-a-new-line
+            -->
+            <span id="image-url"><a href='http://reddit.com/${submission_id}' target='_blank' style="text-decoration:none">...</a>&nbsp;&nbsp;</span>
+            <span id="image-height-box">&nbsp;&nbsp;${height_str}&nbsp;</span><span id="image-previous-weight-box">&nbsp;${previous_weight_str}&nbsp;</span><span id="image-current-weight-box">&nbsp;${current_weight_str}</span>
+        </div>
+    </div>
+    <div class="gap-after-image-entry"></div>
+</script>
+
+<div id="lightgallery" style="display: none;">
+</div>
+
+
+<div id="container">
+    <div id="float-wrap">
+        <!--
+        We add columns via Javascript since its dynamic based on Browser Width
+        -->
+    </div>
+    <div id="spinner-div">
+
+    </div>
+
+</div>
+
+<!--
+<script type=text/html id=spinner-template>
+    <div id="spinner-div">
+        <img src='spinner.gif' class=spinner alt='Loading...'>
+    </div>
+</script>
+-->
+
 </body>
 </html>
