@@ -134,15 +134,6 @@ function resetSpinner(){
     $('#spinner-div').html("<img src='spinner.gif' class=spinner alt='Loading...'>");
 }
 
-function showInfoDialog(){
-    // vex.defaultOptions.className = 'vex-theme-os';
-
-    vex.dialog.alert({
-        message: 'Testing the wireframe theme.',
-        // className: 'vex-theme-wireframe'
-    });
-}
-
 function row() {
     var colIndex, length, $minCol, $currCol;
     for (var i = 0, length = columns.length; i < length; i++) {// for(index = 0, length = columns.length; index < length; index++) {
@@ -454,6 +445,7 @@ function downloadContent(){
             noUiSlider.create(rangeSliderWeight, {
                 start: [135],  // TODO - currently arbitrary default weight
                 step: 5,
+                tooltips:[false],
                 range: {
                     'min': [ round5(global_min_weight)  ],
                     'max': [ round5(global_max_weight) ],
@@ -491,6 +483,7 @@ function downloadContent(){
             // TODO - set the real height
             noUiSlider.create(rangeSliderHeight, {
                 start: [ 64],  // TODO -currently arbitrarily default height
+                tooltips:[false],
                 step: 1,
                 range: {
                     'min': [  global_min_height ],
@@ -555,7 +548,6 @@ function getMethods(obj) {
 
 
 $(document).ready(function() {
-    vex.defaultOptions.className = 'vex-theme-os';
     // console.log('hello!');
     // var $el = $('#my-infinite-container');
 

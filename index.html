@@ -7,12 +7,6 @@
     <link href='https://fonts.googleapis.com/css?family=Lato|Montserrat' rel='stylesheet' type='text/css'>
     <script src="lodash.min.js" defer></script>
 
-    <!-- Start Vex -->
-    <link rel="stylesheet" href="vex.css" />
-    <link rel="stylesheet" href="vex-theme-default.css" />
-    <!-- End Vex -->
-
-
     <style type="text/css">
         /* <![CDATA[ */
 
@@ -165,10 +159,14 @@
     </style>
 
     <link href="nouislider.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="remodal.css">
+    <link rel="stylesheet" href="remodal-default-theme.css">
+
     <script src="nouislider.min.js" defer></script>
     <script src="jquery-2.2.0.min.js" defer></script>
-    <script src="vex.combined.min.js" defer></script>
     <script src="crossfilter.min.js" defer></script>
+    <script src="remodal.min.js" defer></script>
 
     <!--
 
@@ -233,9 +231,34 @@
             <label for="metric_radio">Metric</label>
     </span>
 
-    <span class="input_parameters_boxes"><i class="fa fa-question-circle fa-2x" onclick="showInfoDialog();"></i></span>
+    <span class="input_parameters_boxes"><a href="#modal" style="color:black;"><i class="fa fa-question-circle fa-2x" onclick="showInfoDialog();"></i></a></span>
     </div>
 
+</div>
+
+
+<div class="remodal" data-remodal-id="modal">
+    <button data-remodal-action="close" class="remodal-close"></button>
+    <h1>VisualBMI</h1>
+    <h2>About</h2>
+    <p>
+        About
+
+        "Visual BMI" shows you what weight looks like on a human body using large database of pictures of men and women. If you find this website useful, please share it or send some feedback my way :)
+
+    </p>
+    <h2>Credits</h2>
+    <p>
+        The data on this website was automatically indexed from subreddits on reddit.com. Thanks to all those who share their stories and images in these communities. This website would not be possible without you. Also thanks to Imgur who hosts the images.
+    </p>
+    <h2>Contact</h2>
+    <p>
+        <a href="mailto:whatwillilooklike@gmail.com">Contact</a>
+    </p>
+    <p>
+        TODO - share buttons
+    </p>
+    <br>
 </div>
 
 <br/>
