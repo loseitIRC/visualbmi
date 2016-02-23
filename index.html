@@ -153,6 +153,17 @@
 
         }
 
+        .float_center {
+            /*
+            float: right;
+
+            position: relative;
+            left: -50%;
+            text-align: left;
+            */
+
+        }
+
         input[type="radio"]:not(:checked)+label{ color: lightgray; }
 
 
@@ -290,6 +301,7 @@ We have the image entry template here to play around with it
 
 
 <div id="container">
+    <div class="float_center" id="number-of-results" style="display: none;font-size: 5em;">HELLOOOOO</div>
     <div id="float-wrap">
         <!--
         We add columns via Javascript since its dynamic based on Browser Width

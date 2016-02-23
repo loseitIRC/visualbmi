@@ -23,6 +23,11 @@ var last_selected_height = null;
 var rangeSliderWeight = null;
 var rangeSliderHeight = null;
 
+var weightMargin = 5;
+var heightMargin = 1;
+
+var numberOfResults = {};
+
 function InchesToHeightObj(height_in){
     var feet = Math.floor(height_in / 12);
     var inches = height_in % 12;
@@ -244,6 +249,17 @@ function isGenderFemale(){
     return $("input[name=gender_radio]:checked").val() == 'female';
 }
 
+function deleteBoxes(){
+    if (columns !== null) {
+        console.log('resetting ' + columns.length  +'columns');
+        columns.each(function() {
+            // remove
+            $(this).data('listView').remove();
+        });
+    }
+}
+
+
 function resetBoxes(){
     // Function that is called when any of the filtering or options are set.
     resetSpinner();
@@ -252,13 +268,7 @@ function resetBoxes(){
     // Reset Columns Views
     // columns = $('.infinite');
 
-    if (columns !== null) {
-        console.log('resetting ' + columns.length  +'columns');
-        columns.each(function() {
-            // remove
-            $(this).data('listView').remove();
-        });
-    }
+   deleteBoxes();
 
 
     //console.log('windowWidth: ' + $( window ).width());
@@ -333,12 +343,12 @@ function resetBoxes(){
     var submissionsByHeight = submissions.dimension(function(d) { return d.height_in; });
 
 
-    var currentSelectedHeight = rangeSliderHeight.noUiSlider.get();
-    var heightApproxRatio = 0.01;
-    var minHeight = Math.floor(currentSelectedHeight * (1 - heightApproxRatio));
-    var maxHeight = Math.round(currentSelectedHeight * (1 + heightApproxRatio));
+    var currentSelectedHeight = Math.round(rangeSliderHeight.noUiSlider.get());
+    // var heightApproxRatio = 0.01;
+    var minHeight = currentSelectedHeight - heightMargin;
+    var maxHeight = currentSelectedHeight + heightMargin;
 
-    submissionsByHeight.filter([minHeight, maxHeight]); // TODO: add + Math.MIN_VALUE
+    submissionsByHeight.filter([minHeight, maxHeight + 1]);
 
     //console.log('submissionsByHeight: ' + JSON.stringify(submissionsByHeight.top(20)));
 
@@ -354,10 +364,10 @@ function resetBoxes(){
     var submissionByPreviousWeight = submissions.dimension(function(s) {return s.previous_weight_lbs;});
 
 
-    var weightMargin = 5;
-    var selectedWeight = rangeSliderWeight.noUiSlider.get();
-    var selectedTopWeight = Math.round(selectedWeight + weightMargin);
-    var selectedBottomWeight = Math.round(selectedWeight - weightMargin);
+
+    var selectedWeight = Math.round(rangeSliderWeight.noUiSlider.get());
+    var selectedTopWeight = selectedWeight + weightMargin;
+    var selectedBottomWeight = selectedWeight - weightMargin;
 
     submissionByCurrentWeight.filter([selectedBottomWeight, selectedTopWeight + 1]);
 
@@ -392,6 +402,21 @@ function round5(x)
     return Math.round(x/5)*5;
 }
 
+function addToNumberOfResults(gender, height, weight) {
+    // This function basically is like a default dict / counter in python
+    if (!numberOfResults.hasOwnProperty(gender)) {
+        numberOfResults[gender] = {};
+    }
+    if (!numberOfResults[gender].hasOwnProperty(height)) {
+        numberOfResults[gender][height] = {};
+    }
+    if (!numberOfResults[gender][height].hasOwnProperty(weight)) {
+        numberOfResults[gender][height][weight] = 0;
+    }
+    numberOfResults[gender][height][weight] += 1;
+}
+
+
 function downloadContent(){
     Papa.parse("csv_dump.csv", {
         download: true,
@@ -418,6 +443,8 @@ function downloadContent(){
             }
 
             var submissions = crossfilter(raw_data);
+
+
             var submissionByCurrentWeight = submissions.dimension(function(s) {return s.current_weight_lbs;});
             var submissionByPreviousWeight = submissions.dimension(function(s) {return s.previous_weight_lbs;});
             // Get the top weight
@@ -438,6 +465,59 @@ function downloadContent(){
             //console.log('global_min_weight: ' + global_min_weight);
             //console.log('global_max_weight: ' + global_max_weight);
 
+            // TODO - precompute the number of results
+            for (var i = 0; i < raw_data.length; i++){
+                var current = raw_data[i];
+                var gender = current.gender;
+                for (var height = current.height_in - heightMargin; height <= current.height_in + heightMargin; height++) {
+                    for (var weight = current.previous_weight_lbs - weightMargin; weight <= current.previous_weight_lbs + weightMargin; weight++) {
+                        addToNumberOfResults(gender, height, weight);
+                    }
+                    for (var weight = current.current_weight_lbs - weightMargin; weight <= current.current_weight_lbs + weightMargin; weight++) {
+                        addToNumberOfResults(gender, height, weight);
+                    }
+                }
+            }
+            console.log('numberOfResults:');
+            // console.log(JSON.stringify(numberOfResults));
+            /*
+            var submissionsByGender = submissions.dimension(function(s) { return s.gender; });
+            var genders = [false, true];
+            for (var i = 0; i < genders.length; i++){
+                var gender = genders[i];
+                submissionsByGender.filter(gender);
+                numberOfResults[gender] = {};
+                for (var height = global_min_weight; height <= global_max_weight; height++) {
+                    // TODO - filter by height
+                    numberOfResults[gender][height] = {};
+                    var submissionsByHeight = submissions.dimension(function(d) { return d.height_in; });
+                    var minHeight = height - heightMargin;
+                    var maxHeight = height + heightMargin;
+                    submissionsByHeight.filter([minHeight, maxHeight + 1]); // TODO: add + Math.MIN_VALUE
+
+                    for (var weight = global_min_weight; weight <= global_max_weight; weight++) {
+                        // Count the number of results
+                        // There might be some double counting if a record falls under the same previous and current bucket
+                        // This function is horribly inefficient. UGH.
+                        var num_results = 0;
+                        submissionByPreviousWeight.filter([weight-weightMargin, weight+weightMargin + 1]);
+                        num_results += submissionByPreviousWeight.top(Infinity).length;
+                        submissionByPreviousWeight.filterAll();
+                        submissionByCurrentWeight.filter([weight-weightMargin, weight+weightMargin + 1]);
+                        num_results += submissionByCurrentWeight.top(Infinity).length;
+                        submissionByCurrentWeight.filterAll();
+                        numberOfResults[gender][height][weight] = num_results;
+                    }
+
+                    submissionsByHeight.filterAll();
+                }
+
+                submissionsByGender.filterAll();
+
+            }
+            */
+
+
 
             // TODO - set up Slider
             rangeSliderWeight = document.getElementById('slider-range-weight');
@@ -456,9 +536,21 @@ function downloadContent(){
 
 
             rangeSliderWeight.noUiSlider.on('update', function( values, handle ) {
+                // TODO - consider unifying this code with the code for the height changes. THis is duplication
                 // console.log('values: ' + values);
                 // $('#selected_weight').val(values[0]);
-                updateWeightDiv(Math.floor(values[handle]))
+                updateWeightDiv(Math.floor(values[handle]));
+                // rangeSliderValueElement.innerHTML = values[handle];
+
+            });
+
+            rangeSliderWeight.noUiSlider.on('slide', function( values, handle ) {
+                // TODO - consider unifying this code with the code for the height changes. THis is duplication
+                // console.log('values: ' + values);
+                // $('#selected_weight').val(values[0]);
+                var height = rangeSliderHeight.noUiSlider.get();
+                setCurrentNumberOfResults(height, values[handle]);
+                // updateWeightDiv(Math.floor(values[handle]))
                 // rangeSliderValueElement.innerHTML = values[handle];
 
             });
@@ -466,12 +558,14 @@ function downloadContent(){
 
             rangeSliderWeight.noUiSlider.on('set', function( values, handle ) {
                 var selectedWeight = values[handle];
+                $('#number-of-results').css('display', 'none');
                 // console.log('selectedWeight: ' + selectedWeight);
-                if (selectedWeight != last_selected_weight) {
+                //if (selectedWeight != last_selected_weight) {
                     last_selected_weight = selectedWeight;
                     resetBoxes();
                     drawMoreBoxes();
-                }
+
+                //}
 
             });
 
@@ -490,6 +584,7 @@ function downloadContent(){
                     'max': [ global_max_height ],
                 }
             });
+
             rangeSliderHeight.noUiSlider.on('update', function( values, handle ) {
                 // console.log('values: ' + values);
                 // $('#selected_weight').val(values[0]);
@@ -498,14 +593,26 @@ function downloadContent(){
 
             });
 
+            rangeSliderHeight.noUiSlider.on('slide', function( values, handle ) {
+                // console.log('values: ' + values);
+                // $('#selected_weight').val(values[0]);
+                var weight = rangeSliderWeight.noUiSlider.get();
+                setCurrentNumberOfResults(values[handle], weight);
+                // updateHeightDiv(values[handle]);
+                // rangeSliderValueElement.innerHTML = values[handle];
+
+            });
+
             rangeSliderHeight.noUiSlider.on('set', function( values, handle ) {
                 var selectedHeight = values[handle];
+                $('#number-of-results').css('display', 'none');
                 // console.log('selectedHeight: ' + selectedHeight);
-                if (selectedHeight != last_selected_height) {
+                // We removed the check below since we destroy the boxes on update
+                //if (selectedHeight != last_selected_height) {
                     last_selected_height = selectedHeight;
                     resetBoxes();
                     drawMoreBoxes();
-                }
+                //}
             });
 
             // Now that everything is added, NOW call the layout method
@@ -515,6 +622,23 @@ function downloadContent(){
 
         }
     });
+}
+
+function setCurrentNumberOfResults(height, weight){
+    height = Math.round(height);
+    weight = Math.round(weight);
+    var gender = isGenderFemale();
+    deleteBoxes();
+    $('#spinner-div').html("");
+    $('#number-of-results').css('display', 'inline');
+    // TODO - get the height and weight
+    var num_results = 0;
+    if (gender in numberOfResults && height in numberOfResults[gender] && weight in numberOfResults[gender][height]) {
+        num_results = numberOfResults[gender][height][weight];
+    }
+    console.log('gender: ' + gender.toString() + 'height: ' + height.toString() + 'weight: ' + weight.toString());
+    //console.log('numberOfResults[gender][height][weight] = ' + numberOfResults[gender][height][weight]);
+    $('#number-of-results').html(num_results.toString() + ' results');
 }
 
 function updateHeightDiv(height_in) {
