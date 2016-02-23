@@ -47,7 +47,7 @@ function HeightStringFromInt(height_in){
         var height_obj = InchesToHeightObj(height_in);
         return height_obj.feet.toString() + '&#39;' + height_obj.inches.toString();
     } else {
-        return InchesToCm(height_in).toFixed(1).toString() + ' cm';
+        return Math.round(InchesToCm(height_in)).toString() + ' cm';
     }
 }
 
@@ -55,17 +55,8 @@ function WeightStringFromWeight(weight_lbs){
     if (UnitsAreImperial()) {
         return weight_lbs.toString() + ' lbs';
     } else {
-        return (weight_lbs / 2.2).toFixed(1).toString() + ' kg';
+        return Math.round(weight_lbs / 2.2).toString() + ' kg';
     }
-}
-
-function GetStringTitle(current){
-    // TODO: check to see the previous weight is valid
-    var previous_weight = current.previous_weight_lbs;
-    var current_weight = current.current_weight_lbs;
-
-    return (HeightStringFromInt(current.height_in) + ' / ' +
-    WeightStringFromWeight(previous_weight) + ' &rarr; ' + WeightStringFromWeight(current_weight));
 }
 
 function destroyLightBox() {
@@ -207,7 +198,6 @@ function row() {
         // var html = compiled({'image_url': image_url_medium});
         var image_height = Math.round(imageWidth / current.first_image_aspect_ratio);
         // var height = 400;
-        var title = GetStringTitle(current);
         var previous_weight_str = WeightStringFromWeight(current.previous_weight_lbs);
         var current_weight_str = WeightStringFromWeight(current.current_weight_lbs);
         // console.log('previous_weight_str: ' + previous_weight_str);
