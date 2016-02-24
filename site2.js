@@ -5,7 +5,10 @@ var nextIndexForPhoto = 0;
 var raw_data = null;  // never use raw_data for results. use filtered_submissions
 var filtered_submissions = null;
 
-var imageWidth = 400;
+var DEFAULT_IMAGE_WIDTH = 400;
+var MIN_IMAGE_WIDTH = 200;
+// NOTE: imageWidth can change if it's a 1-column image site. It's a hack-around to make it look good on mobile
+var imageWidth = DEFAULT_IMAGE_WIDTH;
 var columnBorderWidth = 20;  // border on each side of a column
 
 var compiledImageEntryTemplate =  _.template($('#image-entry-template').html());
@@ -279,8 +282,20 @@ function resetBoxes(){
 
     //console.log('windowWidth: ' + $( window ).width());
     // console.log('documentWidth: ' + $( document ).width());
-    console.log('window_width: ' + $(window).width());
-    var num_columns = Math.max(1, Math.floor($(window).width() / (imageWidth + 2 * columnBorderWidth)));
+    var widthOfOneColumn = imageWidth + 2 * columnBorderWidth;
+    var windowWidth = $(window).width()
+    console.log('window_width: ' + windowWidth);
+    var num_columns = Math.max(1, Math.floor(windowWidth / widthOfOneColumn));
+    if (num_columns == 1) {
+        // TODO - not positive WHY I need to use the COLUMN_BUFFER, but it's needed.
+        // There seems to be some sort of CSS style buffer of 10 pixels around the image in addition to whatever
+        // OHHHH -- it's probably the width of the div with id #contained (the one that encapsulates the columns)
+        var COLUMN_BUFFER = 20;
+        imageWidth = Math.max(MIN_IMAGE_WIDTH, windowWidth - (2 * columnBorderWidth) - COLUMN_BUFFER);
+    } else {
+        imageWidth = DEFAULT_IMAGE_WIDTH;
+    }
+
     // var num_columns = 2;
     //console.log('num_columns: ' + num_columns);
     $('#float-wrap').html('');  // Clear the container for the infinite columns
@@ -554,6 +569,7 @@ function downloadContent(){
             // TODO - set up Slider
             rangeSliderWeight = document.getElementById('slider-range-weight');
 
+            // TODO - I should NOT hardcode 250 and 400 below. I should actually do it based on the actual weights
             noUiSlider.create(rangeSliderWeight, {
                 start: [180],  // TODO - currently arbitrary default weight
                 step: 5,
