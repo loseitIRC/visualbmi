@@ -552,7 +552,7 @@ function downloadContent(){
             rangeSliderWeight = document.getElementById('slider-range-weight');
 
             noUiSlider.create(rangeSliderWeight, {
-                start: [135],  // TODO - currently arbitrary default weight
+                start: [180],  // TODO - currently arbitrary default weight
                 step: 5,
                 tooltips:[false],
                 range: {
@@ -607,7 +607,7 @@ function downloadContent(){
 
             // TODO - set the real height
             noUiSlider.create(rangeSliderHeight, {
-                start: [ 64],  // TODO -currently arbitrarily default height
+                start: [ 68],  // TODO -currently arbitrarily default height
                 tooltips:[false],
                 step: 1,
                 range: {
