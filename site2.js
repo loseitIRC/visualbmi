@@ -29,7 +29,7 @@ var heightMargin = 1;
 var numberOfResults = {};
 
 var INFINITY_ON = false;
-var NUM_ROWS_TO_DRAW_EACH_TIME = 8;  // Number of rows to draw after each scroll event
+var NUM_ROWS_TO_DRAW_EACH_TIME = 10;  // Number of rows to draw after each scroll event
 
 function InchesToHeightObj(height_in){
     var feet = Math.floor(height_in / 12);
