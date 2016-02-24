@@ -32,7 +32,7 @@ var INFINITY_ON = false;
 var NUM_ROWS_TO_DRAW_EACH_TIME = 10;  // Number of rows to draw after each scroll event
 
 // Better Scroll Trigger
-var DISTANCE_FROM_BOTTOM_BEFORE_DRAWING_BOXES = 200;
+var DISTANCE_FROM_BOTTOM_BEFORE_DRAWING_BOXES = 250;
 
 function InchesToHeightObj(height_in){
     var feet = Math.floor(height_in / 12);
