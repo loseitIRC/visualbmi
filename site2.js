@@ -276,7 +276,7 @@ function resetBoxes(){
 
     //console.log('windowWidth: ' + $( window ).width());
     // console.log('documentWidth: ' + $( document ).width());
-
+    console.log('window_width: ' + $(window).width());
     var num_columns = Math.max(1, Math.floor($(window).width() / (imageWidth + 2 * columnBorderWidth)));
     // var num_columns = 2;
     //console.log('num_columns: ' + num_columns);
