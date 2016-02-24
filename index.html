@@ -7,6 +7,13 @@
     <link href='https://fonts.googleapis.com/css?family=Lato|Montserrat' rel='stylesheet' type='text/css'>
     <script src="lodash.min.js" defer></script>
 
+    <!-- You can use Open Graph tags to customize link previews.
+    Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
+    <meta property="og:url"           content="http://visualbmi.com" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="VisualBMI" />
+    <meta property="og:description"   content="See what weight looks like on a human body" />
+
     <style type="text/css">
         /* <![CDATA[ */
 
@@ -94,7 +101,7 @@
         }
 
         body {
-            font-family: sans-serif;
+            font-family: 'Lato', sans-serif;
             /*font-family: sans-serif;*/
             background-color: #E8E8E8;
             margin: 0;
@@ -270,22 +277,21 @@
     <button data-remodal-action="close" class="remodal-close"></button>
     <h1>VisualBMI</h1>
     <h2>About</h2>
-    <p>
-        About
-
-        "Visual BMI" shows you what weight looks like on a human body using large database of pictures of men and women. If you find this website useful, please share it or send some feedback my way :)
+    <p style="text-align: left;">
+        VisualBMI shows you what weight looks like on a human body using large database of pictures of men and women. If you find this website useful, please share it or <a href="mailto:visualbmi@gmail.com">send a note.</a>
 
     </p>
     <h2>Credits</h2>
-    <p>
-        The data on this website was automatically indexed from subreddits on reddit.com. Thanks to all those who share their stories and images in these communities. This website would not be possible without you. Also thanks to Imgur who hosts the images.
+    <p style="text-align: left;">
+        The data on this website was automatically indexed from subreddits on reddit.com. Huge thanks to all those who share their stories and photos in these communities. This website would not be possible without them. Also thanks to Imgur who hosts the images.
     </p>
-    <h2>Contact</h2>
+    <h2>Share</h2>
     <p>
-        <a href="mailto:whatwillilooklike@gmail.com">Contact</a>
+
     </p>
     <p>
-        TODO - share buttons
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+        <div class="addthis_sharing_toolbox"></div>
     </p>
     <br>
 </div>
@@ -348,6 +354,10 @@ We have the image entry template here to play around with it
     ga('send', 'pageview');
 
 </script>
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-56cd43b96cd10f7f"></script>
+
 
 </body>
 </html>
