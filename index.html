@@ -191,6 +191,16 @@
             margin: 0 auto;
         }
 
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none;   /* Chrome/Safari/Opera */
+            -khtml-user-select: none;    /* Konqueror */
+            -moz-user-select: none;      /* Firefox */
+            -ms-user-select: none;       /* IE/Edge */
+            user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+        }
+
 
 
     </style>
@@ -249,14 +259,14 @@
 
     <!-- Weight Range Slider -->
     <span id="weight-wrapper" class="input_parameters_boxes" style="width:300px;">
-        <div id="slider-range-weight"></div>
+        <div id="slider-range-weight" class="noselect"></div>
         <br/>
         <div id="selected_weight" style="text-align: center;">Loading...</div>
     </span>
 
     <!-- Height Range Slider -->
     <span id="height-wrapper" class="input_parameters_boxes" style="width:300px;">
-        <div id="slider-range-height"></div>
+        <div id="slider-range-height" class="noselect"></div>
         <br/>
         <div id="selected_height" style="text-align: center;">Loading...</div>
     </span>
