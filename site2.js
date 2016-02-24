@@ -28,6 +28,8 @@ var heightMargin = 1;
 
 var numberOfResults = {};
 
+var INFINITY_ON = false;
+
 function InchesToHeightObj(height_in){
     var feet = Math.floor(height_in / 12);
     var inches = height_in % 12;
@@ -207,7 +209,11 @@ function row() {
         // var html = '<div><img onclick="openLightBox('+ nextIndexForPhoto +')" class="lazy-img" data-original="' + image_url_medium + '" height="'+ height +'" width="' + imageWidth + '" /></div>';
 
         // Append it to the column with the lowest height
-        $minCol.data('listView').append(html);
+        if (INFINITY_ON) {
+            $minCol.data('listView').append(html);
+        } else {
+            $minCol.append(html);
+        }
         nextIndexForPhoto++;
         // listView.append(html);
         // console.log('appending: ' + c);
@@ -242,10 +248,16 @@ function isGenderFemale(){
 function deleteBoxes(){
     if (columns !== null) {
         console.log('resetting ' + columns.length  +'columns');
-        columns.each(function() {
-            // remove
-            $(this).data('listView').remove();
-        });
+        if (INFINITY_ON) {
+            columns.each(function () {
+                // remove
+                $(this).data('listView').remove();
+            });
+        } else {
+            columns.each(function () {
+                $(this).remove();
+            });
+        }
     }
 }
 
@@ -280,20 +292,22 @@ function resetBoxes(){
     columns = $('.infinite');
     console.assert(columns.length > 0, "No columns present!");
 
-    columns.each(function() {
-        listView = new infinity.ListView($(this), {
-            lazy: function(){
-                $(this).find('.lazy-img').each(function() {
-                    var $ref = $(this);
-                    $ref.attr('src', $ref.attr('data-original'));
-                });
-                // console.log('elem data: ' + getMethods(elem));
-                // console.log('elem attr: ' + elem.getAttribute('data-original'));
-                // $(elem).attr('src', $(elem).attr('data-original'));}
-            }
+    if (INFINITY_ON) {
+        columns.each(function () {
+            listView = new infinity.ListView($(this), {
+                lazy: function () {
+                    $(this).find('.lazy-img').each(function () {
+                        var $ref = $(this);
+                        $ref.attr('src', $ref.attr('data-original'));
+                    });
+                    // console.log('elem data: ' + getMethods(elem));
+                    // console.log('elem attr: ' + elem.getAttribute('data-original'));
+                    // $(elem).attr('src', $(elem).attr('data-original'));}
+                }
+            });
+            $(this).data('listView', listView);
         });
-        $(this).data('listView', listView);
-    });
+    }
 
     // We reset the index since we're resetting the boxes
     nextIndexForPhoto = 0;
@@ -384,6 +398,15 @@ function drawMoreBoxes(){
     var LIMIT = 10;  // Just for testing. Number of rows to draw
     for (var i = 0; i < LIMIT; i ++ ) {
         row();
+    }
+
+    if (!INFINITY_ON) {
+        // Since Infinity is not on, we have to do it oursvelves
+
+        $lazy_images = columns.find('.lazy-img');
+        $lazy_images.each(function() {
+            $(this).attr('src', $(this).attr('data-original'));
+        });
     }
 }
 
