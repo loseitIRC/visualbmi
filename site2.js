@@ -31,6 +31,9 @@ var numberOfResults = {};
 var INFINITY_ON = false;
 var NUM_ROWS_TO_DRAW_EACH_TIME = 10;  // Number of rows to draw after each scroll event
 
+// Better Scroll Trigger
+var DISTANCE_FROM_BOTTOM_BEFORE_DRAWING_BOXES = 200;
+
 function InchesToHeightObj(height_in){
     var feet = Math.floor(height_in / 12);
     var inches = height_in % 12;
@@ -781,7 +784,12 @@ $(document).ready(function() {
     $(window).on('scroll', function() {
         if(!updateScheduled) {
             setTimeout(function() {
-                if(onscreen(spinner)) drawMoreBoxes();
+
+                // TODO
+                if($(window).scrollTop() + $(window).height() > $(document).height() - DISTANCE_FROM_BOTTOM_BEFORE_DRAWING_BOXES) {
+                    drawMoreBoxes();
+                }
+                // if(onscreen(spinner)) drawMoreBoxes();
                 updateScheduled = false;
             }, 500);
             updateScheduled = true;
