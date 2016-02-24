@@ -429,6 +429,26 @@ function addToNumberOfResults(gender, height, weight) {
     numberOfResults[gender][height][weight] += 1;
 }
 
+function getNumberOfResultsExactMeasurements(gender, height, weight){
+    if (!numberOfResults.hasOwnProperty(gender)) {
+        return 0;
+    }
+    if (!numberOfResults[gender].hasOwnProperty(height)) {
+        return 0;
+    }
+    if (!numberOfResults[gender][height].hasOwnProperty(weight)) {
+        return 0;
+    }
+    return numberOfResults[gender][height][weight];
+}
+
+function getNumberOfResults(gender, height, weight) {
+    var num_results = 0;
+    for (var cur_weight = weight - weightMargin; cur_weight <= weight + weightMargin; cur_weight++) {
+        num_results += getNumberOfResultsExactMeasurements(gender, height, cur_weight);
+    }
+    return num_results;
+}
 
 function downloadContent(){
     Papa.parse("csv_dump.csv", {
@@ -483,12 +503,8 @@ function downloadContent(){
                 var current = raw_data[i];
                 var gender = current.gender;
                 for (var height = current.height_in - heightMargin; height <= current.height_in + heightMargin; height++) {
-                    for (var weight = current.previous_weight_lbs - weightMargin; weight <= current.previous_weight_lbs + weightMargin; weight++) {
-                        addToNumberOfResults(gender, height, weight);
-                    }
-                    for (var weight = current.current_weight_lbs - weightMargin; weight <= current.current_weight_lbs + weightMargin; weight++) {
-                        addToNumberOfResults(gender, height, weight);
-                    }
+                    addToNumberOfResults(gender, height, current.previous_weight_lbs);
+                    addToNumberOfResults(gender, height, current.current_weight_lbs);
                 }
             }
             console.log('numberOfResults:');
@@ -572,6 +588,8 @@ function downloadContent(){
             rangeSliderWeight.noUiSlider.on('set', function( values, handle ) {
                 var selectedWeight = values[handle];
                 $('#number-of-results').css('display', 'none');
+                // $('#number-of-results').removeClass('display-table-class');
+                // $('#number-of-results').addClass('display-none-class');
                 // console.log('selectedWeight: ' + selectedWeight);
                 //if (selectedWeight != last_selected_weight) {
                     last_selected_weight = selectedWeight;
@@ -619,6 +637,8 @@ function downloadContent(){
             rangeSliderHeight.noUiSlider.on('set', function( values, handle ) {
                 var selectedHeight = values[handle];
                 $('#number-of-results').css('display', 'none');
+                // $('#number-of-results').removeClass('display-table-class');
+                // $('#number-of-results').addClass('display-none-class');
                 // console.log('selectedHeight: ' + selectedHeight);
                 // We removed the check below since we destroy the boxes on update
                 //if (selectedHeight != last_selected_height) {
@@ -643,13 +663,19 @@ function setCurrentNumberOfResults(height, weight){
     var gender = isGenderFemale();
     deleteBoxes();
     $('#spinner-div').html("");
-    $('#number-of-results').css('display', 'inline');
+    // $('#number-of-results').css('display', )
+    $('#number-of-results').removeAttr('style');
+    // $('#number-of-results').removeClass('display-none-class');
+    // $('#number-of-results').addClass('display-table-class');
     // TODO - get the height and weight
-    var num_results = 0;
+    var num_results = getNumberOfResults(gender, height, weight);
+    /*console.log('numberOfResults: ' + JSON.stringify(numberOfResults));*/
+    /*
     if (gender in numberOfResults && height in numberOfResults[gender] && weight in numberOfResults[gender][height]) {
         num_results = numberOfResults[gender][height][weight];
     }
-    console.log('gender: ' + gender.toString() + 'height: ' + height.toString() + 'weight: ' + weight.toString());
+    */
+    // console.log('gender: ' + gender.toString() + 'height: ' + height.toString() + 'weight: ' + weight.toString());
     //console.log('numberOfResults[gender][height][weight] = ' + numberOfResults[gender][height][weight]);
     $('#number-of-results').html(num_results.toString() + ' results');
 }
